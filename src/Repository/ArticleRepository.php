@@ -30,8 +30,16 @@ class ArticleRepository extends ServiceEntityRepository
             ->getResult();
 
     }
-
+    public function searchArticles(string $searchTerm)
+    {
+        return $this->createQueryBuilder('article')
+            ->where('article.title LIKE :searchTerm OR article.body LIKE :searchTerm')
+            ->setParameter('searchTerm', '%' . $searchTerm . '%')
+            ->getQuery()
+            ->getResult();
+    }
 }
+
 
 //    /**
 //     * @return Article[] Returns an array of Article objects
