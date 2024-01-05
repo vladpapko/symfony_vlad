@@ -1,0 +1,23 @@
+{# templates/search/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Результат{% endblock %}
+
+{% block body %}
+    <h1>Search Results for "{{ searchTerm }}"</h1>
+
+    {% if articles is empty %}
+        <p>No articles found for "{{ searchTerm }}".</p>
+    {% else %}
+        <ul>
+            {% for article in articles %}
+                <li>
+                    <a href="{{ path('app_article_show', {'id': article.id}) }}">
+                        {{ article.title }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

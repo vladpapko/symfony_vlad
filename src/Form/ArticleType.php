@@ -17,10 +17,6 @@ class ArticleType extends AbstractType
             ->add('title')
             ->add('body')
             ->add('createdAt')
-            ->add('author', EntityType::class, [
-                'class' => User::class,
-'choice_label' => 'id',
-            ])
         ;
     }
 

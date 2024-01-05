@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block body %}
+    <h1>Регистрация</h1>
+
+    {% if app.user %}
+        <p>Вы уже зарегистрировались и авторизовались в системе.</p>
+    {% else %}
+        {{ form_start(registrationForm) }}
+        {{ form_row(registrationForm.email, {'attr': {'class': 'custom-email-class', 'placeholder': 'Email'}}) }}
+        {{ form_row(registrationForm.password.first, {'attr': {'class': 'custom-password-class', 'placeholder': 'Пароль'}}) }}
+        {{ form_row(registrationForm.password.second, {'attr': {'class': 'custom-password-class', 'placeholder': 'Повторите пароль'}}) }}
+        <button class="btn btn-success" type="submit">Зарегистрироваться</button>
+        {{ form_end(registrationForm) }}
+    {% endif %}
+{% endblock %}

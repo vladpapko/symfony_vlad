@@ -9,9 +9,13 @@
               <h2>{{ article.title }}</h2>
               <div class="article-content">
                      {{ article.body }}
+
+
               </div>
               <div>
+                     <p>Автор: {{ article.author.email }}</p>
                      Дата создания: {{ article.createdAt|date('d.m.Y.H:i:s')}}
+                     <a href="{{ path('app_article_show', {'id': article.id}) }}#comments" class="btn btn-secondary">Комментировать</a>
               </div>
        </article>
    {% endfor %}

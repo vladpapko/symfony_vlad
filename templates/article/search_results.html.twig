@@ -1,0 +1,16 @@
+{# templates/article/search_results.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h2>Результаты поиска для "{{ searchTerm }}"</h2>
+    {% for article in articles %}
+        <div>
+            <h3>{{ article.title }}</h3>
+            <p>{{ article.content|slice(0, 200) ~ '...' }}</p>
+            <!-- Ссылка на полную статью -->
+        </div>
+    {% else %}
+        <p>Статей не найдено.</p>
+    {% endfor %}
+{% endblock %}

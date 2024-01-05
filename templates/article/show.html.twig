@@ -6,29 +6,44 @@
     <h1>Article</h1>
 
     <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ article.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ article.title }}</td>
-            </tr>
-            <tr>
-                <th>Body</th>
-                <td>{{ article.body }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ article.createdAt ? article.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
+
+        <tr>
+            <th>Заголовок</th>
+            <td>{{ article.title }}</td>
+        </tr>
+        <tr>
+            <th>Содержание</th>
+            <td>{{ article.body }}</td>
+        </tr>
+        <tr>
+            <th>Дата создания</th>
+            <td>{{ article.createdAt ? article.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+        </tr>
+        <!-- Другие детали статьи -->
     </table>
 
-    <a href="{{ path('app_article_index') }}">back to list</a>
-
-    <a href="{{ path('app_article_edit', {'id': article.id}) }}">edit</a>
-
+    <a href="{{ path('app_article_index') }}">Назад</a>
+    <a href="{{ path('app_article_edit', {'id': article.id}) }}">Изменить</a>
     {{ include('article/_delete_form.html.twig') }}
+
+    {# Форма для добавления комментария #}
+    <h2>Добавить комментарий</h2>
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button type="submit">Отправить комментарий</button>
+    {{ form_end(form) }}
+
+    {# Отображение существующих комментариев #}
+    <h2>Комментарии</h2>
+    <section>
+        {% for comment in article.comments %}
+            <div>
+                <p>{{ comment.content }}</p>
+                <p>Комментарий от: {{ comment.email }}</p>
+            </div>
+        {% else %}
+            <p>Пока нет комментариев.</p>
+        {% endfor %}
+    </section>
+
 {% endblock %}

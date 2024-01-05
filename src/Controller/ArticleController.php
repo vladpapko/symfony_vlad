@@ -10,15 +10,25 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\Comment;
+use App\Form\CommentType;
 
 #[Route('/articles')]
 class ArticleController extends AbstractController
 {
-    #[Route('/', name: 'app_article_index', methods: ['GET'])]
+    #[Route('/article', name: 'app_article_index')]
     public function index(ArticleRepository $articleRepository): Response
     {
+        $user = $this->getUser();
+
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $articles = $articleRepository->findAll();
+        } else {
+            $articles = $articleRepository->findBy(['author' => $user]);
+        }
+
         return $this->render('article/index.html.twig', [
-            'articles' => $articleRepository->findAll(),
+            'articles' => $articles,
         ]);
     }
 
@@ -41,12 +51,34 @@ class ArticleController extends AbstractController
             'form' => $form,
         ]);
     }
-
-    #[Route('/{id}', name: 'app_article_show', methods: ['GET'])]
-    public function show(Article $article): Response
+    #[Route('/{id}', name: 'app_article_show', methods: ['GET', 'POST'])]
+    public function show(Article $article, Request $request, EntityManagerInterface $entityManager): Response
     {
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $comment->setArticle($article);
+            $comment->setCreatedAt(new \DateTimeImmutable());
+
+            if ($this->getUser()) {
+                $comment->setAuthor($this->getUser());
+                $comment->setEmail($this->getUser()->getEmail());
+                $comment->setStatus('approved'); // Автоматическое одобрение для авторизованных пользователей
+            } else {
+                $comment->setStatus('pending'); // Требуется одобрение администратора
+            }
+
+            $entityManager->persist($comment);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_article_show', ['id' => $article->getId()]);
+        }
+
         return $this->render('article/show.html.twig', [
             'article' => $article,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -56,10 +88,15 @@ class ArticleController extends AbstractController
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
 
+        if ($this->getUser() !== $article->getAuthor() && !$this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException('У вас нет прав на редактирование этой статьи.');
+        }
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
             return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
+
+
         }
 
         return $this->render('article/edit.html.twig', [
@@ -68,14 +105,24 @@ class ArticleController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_article_delete', methods: ['POST'])]
+    #[Route('/article/delete/{id}', name: 'article_delete')]
     public function delete(Request $request, Article $article, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$article->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($article);
-            $entityManager->flush();
+        // Получаем текущего пользователя
+        $user = $this->getUser();
+
+        // Проверяем, является ли пользователь автором статьи или администратором
+        if ($article->getAuthor() === $user || in_array('ROLE_ADMIN', $user->getRoles())) {
+            if ($this->isCsrfTokenValid('delete'.$article->getId(), $request->request->get('_token'))) {
+                $entityManager->remove($article);
+                $entityManager->flush();
+            }
+        } else {
+            // Если пользователь не имеет прав, можно выбросить исключение или перенаправить его
+            throw $this->createAccessDeniedException();
         }
 
-        return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_article_index');
     }
+
 }

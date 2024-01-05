@@ -1,0 +1,75 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    font-family:  Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+header {
+    font-family:  Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    background-color: #f8f9fa;
+
+    border-bottom: 1px solid #e7e7e7;
+    padding: 10px 0;
+}
+
+.container {
+    font-family:  Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-left a,
+.header-right a {
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+}
+
+.header-right {
+    display: flex;
+}
+
+/* Нет необходимости дублировать стили для footer, так как они уже inline в шаблоне */
+
+.main {
+    flex: 1;
+    padding: 10px;
+}
+
+.footer-left a, .footer-right a {
+    text-decoration: none;
+    color: white;
+    padding: 0 10px;
+}
+
+.footer-right {
+    text-align: right;
+}
+
+.search-form {
+    text-align: center;
+    margin: 20px 0;
+}
+.search-form input[type="text"] {
+    width: 50%;
+    padding: 10px;
+    font-size: 1.2em;
+}
+.search-form button {
+    padding: 10px 20px;
+    font-size: 1.2em;
+}

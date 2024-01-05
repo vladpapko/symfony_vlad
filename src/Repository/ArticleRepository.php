@@ -33,7 +33,18 @@ class ArticleRepository extends ServiceEntityRepository
     public function searchArticles(string $searchTerm)
     {
         return $this->createQueryBuilder('article')
-            ->where('article.title LIKE :searchTerm OR article.body LIKE :searchTerm')
+            ->where('article.title = :searchTerm')
+            ->setParameter('searchTerm', $searchTerm)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findBySearchQuery(string $searchTerm): array
+    {
+        $qb = $this->createQueryBuilder('a');
+
+        return $qb->where($qb->expr()->like('a.title', ':searchTerm'))
+            ->orWhere($qb->expr()->like('a.body', ':searchTerm'))
             ->setParameter('searchTerm', '%' . $searchTerm . '%')
             ->getQuery()
             ->getResult();

@@ -1,18 +1,48 @@
+{# templates/base.html.twig #}
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {% block stylesheets %}
-            {{ ux_controller_link_tags() }}
-        {% endblock %}
+<html style="height: 100%;">
+<head>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ775/resC6X9eA13wo3mI7J6pcoFsijC/7Il" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+</head>
+<body style="display: flex; flex-direction: column; min-height: 100vh; margin: 0;">
+<header>
+    <nav class="container">
+        <div class="header-left">
+            <a href="{{ path('homepage') }}">Главная</a>
+        </div>
+        <div class="header-right">
+            {% if app.user %}
+                <a href="{{ path('app_logout') }}">Выйти</a>
+            {% else %}
+                <a href="{{ path('app_login') }}">Авторизация</a>
+                <a href="{{ path('app_register') }}">Регистрация</a>
+            {% endif %}
+        </div>
+    </nav>
+</header>
+<form action="{{ path('app_search') }}" method="get">
+    <input type="text" name="q" placeholder="Поиск...">
+    <button type="submit">Поиск</button>
+</form>
+<main style="flex: 1;">
+    {% block body %}{% endblock %}
+</main>
 
-        {% block javascripts %}
-{% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+<footer style="background-color: #343a40; color: white; text-align: center; padding: 20px 0; margin-top: auto;">
+    {% block footer %}
+        <div class="container">
+            <div class="footer-left">
+                <a href="{{ path('homepage') }}">Статьи</a>
+                <a href="{{ path('app_article_index') }}">Написать статью</a>
+                <a href="{{ path('app_profile') }}">Профиль</a>
+                <a href="{{ path('app_admin') }}">Админ панель, только для админа</a>
+            </div>
+            <div class="footer-right">
+                <p>&copy; {{ "now"|date("Y") }} ВладосБлог</p>
+            </div>
+        </div>
+    {% endblock %}
+</footer>
+</body>
 </html>
