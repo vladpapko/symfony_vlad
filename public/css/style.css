@@ -43,7 +43,7 @@ header {
     display: flex;
 }
 
-/* Нет необходимости дублировать стили для footer, так как они уже inline в шаблоне */
+
 
 .main {
     flex: 1;
