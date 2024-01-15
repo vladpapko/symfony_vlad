@@ -25,8 +25,13 @@
 ТАКЖЕ ПРЕДСТАВЛЕН ФАЙЛ С ДЕМОНСТРАЦИЕЙ САЙТА
 
 Установка: 
+
 Склонируйте репозиторий: git clone
+
 Запустите контейнеры Docker: docker-compose up -d
+
 Установите зависимости через Composer: docker-compose exec php composer install
+
 Примените миграции для базы данных: docker-compose exec php bin/console doctrine:migrations:migrate
+
 Запустите веб-сервер: Symfony server:start
