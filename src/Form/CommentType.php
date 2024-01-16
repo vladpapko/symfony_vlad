@@ -26,7 +26,7 @@ class CommentType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Comment::class,
-            'is_user_authenticated' => false, // Добавьте новую опцию с значением по умолчанию
+            'is_user_authenticated' => false, 
         ]);
     }
 }
